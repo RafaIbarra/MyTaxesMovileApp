@@ -29,6 +29,7 @@ function Camara ({navigation}){
         
         if (data && !isFetching) { // Verifica que no se esté procesando otra solicitud
           setIsFetching(true); // Marca que la solicitud está en progreso
+          console.log('detecto')
           // console.log('LA DATA', data)
           try {
             
@@ -43,9 +44,12 @@ function Camara ({navigation}){
             actualizarEstadocomponente('datocdc',datacdc)
             actualizarEstadocomponente('isHeaderVisible',true)
             const url=data
-            console.log(data)
+            
             Linking.openURL(url).catch((err) => console.error("No se pudo abrir la URL:", err));
-            navigate("CargaArchivoXml")
+            //navigate("CargaArchivoXml")
+            actualizarEstadocomponente('qrdetected',true)
+            actualizarEstadocomponente('activecamara',false)
+
             // setScannedData(dataFetched['url']); // Guarda los datos para mostrarlos en la app
       
           } catch (error) {
@@ -60,7 +64,8 @@ function Camara ({navigation}){
     const cerrarcamara =()=>{
         setIsFetching(true);
         setScanning(false)
-        navigation.goBack();
+        actualizarEstadocomponente('activecamara',false)
+        //navigation.goBack();
     }
     useEffect(() => {
         if (permission && !permission.granted) {

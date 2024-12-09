@@ -16,7 +16,9 @@ export const AuthProvider = ({ children }) => {
         
         obtuvopermiso:false,
         datafactura:[],
-        isHeaderVisible:true
+        isHeaderVisible:true,
+        activecamara :false,
+        qrdetected:false,
         
     
       })
@@ -31,6 +33,8 @@ export const AuthProvider = ({ children }) => {
     
         actualizarEstadocomponente('datafactura',[])
         actualizarEstadocomponente('isHeaderVisible',true)
+        actualizarEstadocomponente('activecamara',false)
+        actualizarEstadocomponente('qrdetected',false)
         
     
       }

@@ -18,7 +18,7 @@ async function Iniciarsesion(usuario,password){
                     password: password,
                   }),
         }
-    console.log(`${API_BASE}/${endpoint}`)
+    
     const response = await fetch(`${API_BASE}/${endpoint}`, requestOptions);  
         data= await response.json();
         resp= response.status;

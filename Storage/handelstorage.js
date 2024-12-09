@@ -39,8 +39,7 @@ async function  Handelstorage (opcion,item,valor){
             dataanno:añoActual
           }
           
-          // localStorage.setItem('userdate', JSON.stringify(datadate))
-          // localStorage.setItem('userstats', JSON.stringify(datastats))
+           
           
           await AsyncStorage.setItem("userdate", JSON.stringify(datadate));
           await AsyncStorage.setItem("userstats", JSON.stringify(datastats));

@@ -1,13 +1,16 @@
 import React, { useState, useEffect,useContext } from 'react';
-import { View, Text,  StyleSheet, Alert,ActivityIndicator,TouchableOpacity,Linking   } from 'react-native';
-import { CameraView, useCameraPermissions } from 'expo-camera';
-import { Button } from 'react-native-paper';
+import { View,   StyleSheet, Alert,TouchableOpacity,Linking   } from 'react-native';
+import { useCameraPermissions } from 'expo-camera';
+
 import { AuthContext } from '../../../AuthContext';
 import { useNavigation } from "@react-navigation/native";
-import SimpleLineIcons from '@expo/vector-icons/SimpleLineIcons';
+import ScreensCabecera from '../../ScreensCabecera/ScreensCabecera';
 import Fontisto from '@expo/vector-icons/Fontisto';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
+
 function QRScanner({ navigation }) {
+  const[title,setTitle]=useState('CARGA QR')
+  const[backto,setBackto]=useState('MainTabs2')
   const [permission, requestPermission] = useCameraPermissions();
   const [scanning, setScanning] = useState(false);
   const [scannedData, setScannedData] = useState(null);
@@ -22,7 +25,8 @@ function QRScanner({ navigation }) {
   }, [permission]);
 
  const ActivarCamara=()=>{
-  navigate("StackCamara")
+  // navigate("StackCamara")
+  actualizarEstadocomponente('activecamara',true)
  }
 
   const startScanning = () => {
@@ -31,12 +35,7 @@ function QRScanner({ navigation }) {
       setScannedData(null)
       console.log('inicia la camara')
       console.log(estadocomponente.isHeaderVisible)
-      // navigate("StackQrOpciones")
-      // actualizarEstadocomponente('isHeaderVisible',false)
-      // navigation.setOptions({
-      //   tabBarVisible: false,
-      //   headerShown: true,
-      // });
+     
       
     } else {
       requestPermission(); // Solicitar permiso si no está concedido
@@ -75,49 +74,19 @@ function QRScanner({ navigation }) {
 
   return (
     <View style={styles.container}>
-      {!scanning ? (
-        <>
-          <Fontisto name="qrcode" style={styles.qrIcon} />
-          {/* <Button title="Iniciar Escaneo" onPress={startScanning} /> */}
-          <Button  style={{ marginTop: 10,marginBottom: 10,backgroundColor: 'rgba(44,148,228,0.7)',width: 70,height: 70,marginLeft: '45%',
-                            justifyContent: 'center', alignItems: 'center', paddingLeft:15}}  
-                  icon={() => {
-                    // return <MaterialCommunityIcons name="content-save-check" size={30} color="white" />
-                    return <FontAwesome name="camera-retro" size={45} color="white" />
-                  }}
-                  mode="elevated" 
-                  textColor="white"
-                  onPress={ActivarCamara}
-                  >
-                             
-            </Button>
-         
-        </>
-      ) : (
-        <>
-           <View style={styles.cameraContainer}>
-            <CameraView
-              style={styles.camera}
-              facing='back'
-              onBarcodeScanned={handleBarcodeScanned} 
-            />
-            {isFetching && ( // Muestra el ActivityIndicator sobre la cámara
-              <View style={styles.overlay}>
-                <ActivityIndicator size="large" color="#006400" style={styles.spinner} />
-                <Text style={styles.waitingText}>Detectado, esperando datos...</Text>
-              </View>
-            )}
-            <TouchableOpacity 
-              style={styles.closeIcon} 
-              onPress={() => setScanning(false)}
-            >
-              <SimpleLineIcons name="close" size={40} color="red" />
-            </TouchableOpacity>
-          </View>
-          {/* <Button title="Detener Escaneo" onPress={() => setScanning(false)} /> */}
+      <ScreensCabecera title={title} backto={backto}></ScreensCabecera>
+      <View style={styles.containerobjets}>
+
+        
+            <Fontisto name="qrcode" style={styles.qrIcon} />
+            <TouchableOpacity style={[styles.botoncamara,{ backgroundColor:'#57DCA3'}]} onPress={ActivarCamara}>
+                    <FontAwesome name="camera-retro" size={45} color="white" />
+            </TouchableOpacity> 
           
-        </>
-      )}
+         
+        
+        
+      </View>
   
       
     </View>
@@ -128,49 +97,34 @@ function QRScanner({ navigation }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    
+  },
+  containerobjets:{
+    flex:1,
     justifyContent: 'center',
     alignItems: 'stretch',
-    width: '100%',
+    // width: '100%',
+   
   },
-  cameraContainer: {
-    flex: 1,
-    position: 'relative', // Permite el uso de posicionamiento absoluto para el spinner
+  botoncamara:{
+    marginTop: 10,
+    marginBottom: 10,
+    backgroundColor: 'rgba(44,148,228,0.7)',
+    width: 70,
+    height: 70,
+    marginLeft: '45%',
+    justifyContent: 'center', 
+    alignItems: 'center', 
+    borderRadius:20
+    
   },
-  camera: {
-    flex: 1,
-    width: '100%',
-  },
+
   scannedText: {
     marginTop: 20,
     fontSize: 18,
     color: 'green',
   },
-  overlay: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
-    justifyContent: 'center', // Centra el contenido verticalmente
-    alignItems: 'center', // Centra el contenido horizontalmente
-    backgroundColor: 'rgba(0, 0, 0, 0.7)', // Fondo semi-transparente para la superposición
-  },
-  spinner: {
-    marginBottom: 10, // Espaciado entre el spinner y el texto
-  },
-  waitingText: {
-    color: 'red', // Cambia el color del texto si es necesario
-    fontSize: 25,
-    textAlign: 'center', // Centra el texto
-    fontWeight:'bold'
-  },
-  closeIcon: {
-    position: 'absolute',
-    top: 40,
-    right: 20,
-    zIndex: 1, // Asegura que el icono esté al frente
-  },
-  
+ 
   qrIcon: {
     fontSize: 250, // Ajusta el tamaño según lo necesario
     color: '#000', // Cambia el color si es necesario

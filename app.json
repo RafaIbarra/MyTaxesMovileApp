@@ -19,13 +19,34 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "permissions": [
+        "android.permission.RECORD_AUDIO"
+      ],
+      "package": "com.rafael86.MyTaxesMovileApp"
     },
     "web": {
       "favicon": "./assets/favicon.png"
     },
     "plugins": [
-      "expo-font"
-    ]
+      "expo-font",
+      "expo-build-properties",
+      [
+        "@react-native-voice/voice",
+        {
+          "microphonePermission": "Allow MyTaxesMovileApp to access your microphone",
+          "speechRecognitionPermission": "Allow Voice to Text Tutorial to securely recognize user speech"
+        }
+      ],
+      "expo-speech-recognition"
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "81c8a8bd-9d82-4e47-b119-5aedded018d9"
+      }
+    },
+    "sdkVersion": "52.0.7",
+    "platforms": ["ios", "android"],
+    "devClient": true
   }
 }

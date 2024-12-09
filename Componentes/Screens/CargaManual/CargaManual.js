@@ -1,29 +1,42 @@
-import React, { useContext } from 'react';
-import {  View,Text,Linking,Alert  } from "react-native";
-import { Button } from 'react-native-paper';
+import React, { useContext,useState, useEffect } from 'react';
+
+// import { Button } from 'react-native-paper';
 import * as Clipboard from 'expo-clipboard';
+// import { View, Text, Button, StyleSheet,Linking,Alert } from 'react-native';
+import { View,  StyleSheet } from 'react-native';
+
+
+
 function CargaManual({ navigation }){
+    
+    const[title,setTitle]=useState('CARGA MANUAL')
+    const[backto,setBackto]=useState('MainTabs2')
+
 
     
-        
-        const copiarAlPortapapeles = async () => {
-            const valorACopiar = "01800319702001005008254822024103013609116639";
-            await Clipboard.setStringAsync(valorACopiar);
-            Alert.alert("Copiado", "El valor se ha copiado al portapapeles");
-            const url='https://ekuatia.set.gov.py/consultas/'
-        
-        
-                Linking.openURL(url).catch((err) => console.error("No se pudo abrir la URL:", err));
-          };
-        
+   
+
     
     return(
-        <View>
-            <Text>
-                CARGA MANUAL
-                <Button  onPress={ copiarAlPortapapeles}>REGISTRAR</Button>
-            </Text>
-        </View>
+
+
+      <View style={styles.container}>
+          
+        
+      </View>
+
+   
     )
 }
+
+const styles = StyleSheet.create({
+    container: {
+      flex: 1,
+      // backgroundColor: '#fff',
+      // alignItems: 'center',
+      // justifyContent: 'center',
+    },
+    
+  });
+  
 export default CargaManual

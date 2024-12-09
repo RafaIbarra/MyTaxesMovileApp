@@ -1,13 +1,17 @@
 import React, { useContext, useState, useEffect } from 'react';
-import {  StyleSheet,View,TouchableOpacity,TextInput,Text,Modal,ScrollView } from "react-native";
+import {  StyleSheet,View,TouchableOpacity,TextInput,Text,Modal,ScrollView,Button } from "react-native";
 import { DataTable } from 'react-native-paper';
 import { useTheme } from '@react-navigation/native';
-import { Button } from 'react-native-paper';
+
 import { AuthContext } from '../../../AuthContext';
-import { useNavigation } from "@react-navigation/native";
+import { useNavigation  } from "@react-navigation/native";
+import MaterialIcons from '@expo/vector-icons/MaterialIcons';
+import ScreensCabecera from '../../ScreensCabecera/ScreensCabecera';
 import Generarpeticion from '../../../Apis/peticiones';
 function DetalleFactura({ navigation }){
-    const { colors } = useTheme();
+    const [title,setTitle]=useState('Detalle Factura')
+    const [backto,setBackto]=useState('CargaArchivoXml')
+    const { colors,fonts } = useTheme();
     const { estadocomponente } = useContext(AuthContext);
     const {  actualizarEstadocomponente } = useContext(AuthContext);
     const [detallefactura,setDetallefactura]=useState()
@@ -16,10 +20,18 @@ function DetalleFactura({ navigation }){
     const [fechaoperacion,setFechaoperacion]=useState('')
     const [nrofactura,setNrofactura]=useState('')
     const [conceptos,setConceptos]=useState('')
+    const [cantidadconceptos,setCantidadconceptos]=useState(0)
     const [liqiva10,setLiqiva10]=useState('')
     const [datamontos,setDatamontos]=useState([])
     const { navigate } = useNavigation();
 
+    const volver=()=>{
+      
+      navigation.navigate('MainTabs2', {
+        screen: 'ListadoFacturas', // Nombre exacto de la pantalla en el Tab
+      });
+      
+    }
     const registrar= async ()=>{
       // console.log(conceptos)
       const detallefactura = conceptos.map(item => ({
@@ -52,7 +64,7 @@ function DetalleFactura({ navigation }){
     const respuesta=result['resp']
     if (respuesta === 200) {
       
-      navigate("Listado", { })
+      volver()
       // reiniciarvalorestransaccion()
       // item.recarga='si'
   
@@ -70,7 +82,10 @@ function DetalleFactura({ navigation }){
     //  setMensajeerror( result['data']['error'])
     //  showDialog(true)
     console.log(result['data']['error'])
-    navigate("Listado", { })
+    volver()
+    // navigate("MainTabs2", { })
+    
+    //navigation.goBack();
     }
         //setGuardando(false)
 
@@ -98,6 +113,7 @@ function DetalleFactura({ navigation }){
       const from = 0;
       const to = 10;
       const tamañoletratabla=10
+      const tamañoletraheadertabla=12
     useEffect(() => {
         setDetallefactura(estadocomponente.datafactura)
         setNombreempresa(estadocomponente.datafactura.DataEmpresa.Empresa)
@@ -110,6 +126,9 @@ function DetalleFactura({ navigation }){
         setDatamontos(estadocomponente.datafactura.DataMontos)
         const conceptos = estadocomponente.datafactura.Conceptos;
         // console.log(conceptos)
+        const itemCount = Object.keys(conceptos).filter(key => key.startsWith('Item_')).length;
+        console.log(itemCount)
+        setCantidadconceptos(itemCount)
         const itemsExtraidos = [];
         for (const key in conceptos) {
             if (conceptos.hasOwnProperty(key)) {
@@ -138,136 +157,160 @@ function DetalleFactura({ navigation }){
 
 
     return(
-      <View>
+      <View style={{ flex: 1 }}>
+        <ScreensCabecera title={title} backto={backto} ></ScreensCabecera>
+            
+            <View style={[styles.contenedorcabeceradatos,{marginTop:20}]}>
+               <Text style={[styles.labelcabeceradatos,{ fontFamily: fonts.regular.fontFamily }]}>
+                    Local Compra:
+                  </Text>
+                  <TextInput
+                    style={[styles.inputcabeceradatos,{color: colors.text,backgroundColor: colors.backgroundInpunt,fontFamily: fonts.regular.fontFamily,}]}
+                    value={nombreempresa}
+                    onChangeText={nombreempresa => textoempresa(nombreempresa)}
+                    underlineColorAndroid="transparent"
+                    editable={!detallefactura}
+                    multiline={false} // Permite desplazamiento horizontal si es necesario
+                    scrollEnabled={false} // Habilita el desplazamiento horizontal
+                  />
+            </View>
+                        
+            
+            <View style={styles.contenedorcabeceradatos}>
+                <Text style={[styles.labelcabeceradatos,{ fontFamily: fonts.regular.fontFamily }]}>
+                  RUC:
+                </Text>
+                <TextInput
+                  style={[styles.inputcabeceradatos,{color: colors.text,backgroundColor: colors.backgroundInpunt,fontFamily: fonts.regular.fontFamily,}]}
+                  value={rucempresa}
+                  onChangeText={rucempresa => textoempresa(rucempresa)}
+                  underlineColorAndroid="transparent"
+                  editable={!detallefactura}
+                  multiline={false} // Asegura que el campo no sea multilinea
+                  scrollEnabled={false} // Desactiva el desplazamiento horizontal
+                />
+            </View>
 
-        <ScrollView style={{maxHeight:550}}>
-            <TextInput style={[styles.inputtextactivo,{color: colors.text,
-                                        backgroundColor:colors.backgroundInpunt, 
-                                        marginTop:20,marginLeft:'5%',marginRight:10,
-                                        // marginBottom:30,
-                                        // borderBottomColor: isFocusedobs ? colors.textbordercoloractive : colors.textbordercolorinactive 
-                                        }]}
-                                        placeholder='Local de Compra'
-                                        placeholderTextColor='gray'
-                                        label='Local'
-                                        value={nombreempresa}
-                                        // textAlignVertical="center"
-                                        onChangeText={nombreempresa => textoempresa(nombreempresa)}
-                                        // onFocus={() => setIsFocusedobs(true)}
-                                        // onBlur={() => setIsFocusedobs(false)}
-                                        underlineColorAndroid="transparent"
-                                        editable={!detallefactura}
-                        />
-            <TextInput style={[styles.inputtextactivo,{color: colors.text,
-                                        backgroundColor:colors.backgroundInpunt, 
-                                        // marginTop:20,
-                                        marginLeft:'5%',marginRight:10,
-                                        // marginBottom:30,
-                                        // borderBottomColor: isFocusedobs ? colors.textbordercoloractive : colors.textbordercolorinactive 
-                                        }]}
-                                        placeholder='RUC'
-                                        placeholderTextColor='gray'
-                                        label='RUC'
-                                        value={rucempresa}
-                                        // textAlignVertical="center"
-                                        onChangeText={rucempresa => textoempresa(rucempresa)}
-                                        // onFocus={() => setIsFocusedobs(true)}
-                                        // onBlur={() => setIsFocusedobs(false)}
-                                        underlineColorAndroid="transparent"
-                                        editable={!detallefactura}
-                        />
+      
+            <View style={styles.contenedorcabeceradatos}>
+              <Text style={[styles.labelcabeceradatos,{ fontFamily: fonts.regular.fontFamily }]}>
+                N° Factura:
+              </Text>
+              <TextInput
+                style={[styles.inputcabeceradatos,{color: colors.text,backgroundColor: colors.backgroundInpunt,fontFamily: fonts.regular.fontFamily,}]}
+                value={nrofactura}
+                onChangeText={nrofactura => textoempresa(nrofactura)}
+                underlineColorAndroid="transparent"
+                editable={!detallefactura}
+                multiline={false} // Asegura que el campo no sea multilinea
+                scrollEnabled={false} // Desactiva el desplazamiento horizontal
+              />
+            </View>
 
-            <TextInput style={[styles.inputtextactivo,{color: colors.text,
-                                        backgroundColor:colors.backgroundInpunt, 
-                                        // marginTop:20,
-                                        marginLeft:'5%',marginRight:10,
-                                        // marginBottom:5,
-                                        // borderBottomColor: isFocusedobs ? colors.textbordercoloractive : colors.textbordercolorinactive 
-                                        }]}
-                                        placeholder='N° Factura'
-                                        placeholderTextColor='gray'
-                                        label='N° Factura'
-                                        value={nrofactura}
-                                        // textAlignVertical="center"
-                                        onChangeText={nrofactura => textoempresa(nrofactura)}
-                                        // onFocus={() => setIsFocusedobs(true)}
-                                        // onBlur={() => setIsFocusedobs(false)}
-                                        underlineColorAndroid="transparent"
-                                        editable={!detallefactura}
-                        />
-
-            <TextInput style={[styles.inputtextactivo,{color: colors.text,backgroundColor:colors.backgroundInpunt, marginLeft:'5%',marginRight:10,
-                                        
-                                        }]}
-                                        placeholder='Fecha Operacion'
-                                        placeholderTextColor='gray'
-                                        label='F. Operacion'
-                                        value={fechaoperacion}
-                                        // textAlignVertical="center"
-                                        onChangeText={fechaoperacion => textoempresa(fechaoperacion)}
-                                        // onFocus={() => setIsFocusedobs(true)}
-                                        // onBlur={() => setIsFocusedobs(false)}
-                                        underlineColorAndroid="transparent"
-                                        editable={!detallefactura}
-                        />
-
-            <DataTable>
-                <DataTable.Header>
-                    <DataTable.Title style={{ flex: 2 }}>Concepto</DataTable.Title>
-                    <DataTable.Title numeric>Cant</DataTable.Title>
-                    <DataTable.Title numeric>Total</DataTable.Title>
-                </DataTable.Header>
-
-                {conceptos.slice(from, to).map((item) => (
+            <View style={styles.contenedorcabeceradatos}>
+                <Text style={[styles.labelcabeceradatos,{ fontFamily: fonts.regular.fontFamily }]}>
+                  Fecha Operacion:
+                </Text>
+                <TextInput
+                  style={[styles.inputcabeceradatos,{color: colors.text,backgroundColor: colors.backgroundInpunt,fontFamily: fonts.regular.fontFamily,}]}
+                  value={fechaoperacion}
+                  onChangeText={fechaoperacion => textoempresa(fechaoperacion)}
+                  underlineColorAndroid="transparent"
+                  editable={!detallefactura}
+                  multiline={false} // Permite desplazamiento horizontal si es necesario
+                  scrollEnabled={false} // Habilita el desplazamiento horizontal
+                />
+            </View>
+            
+            <View style={{ maxHeight: 250, overflow: 'hidden' }}>
+              <DataTable>
+                <View style={{ backgroundColor: 'gray', marginLeft: 8, marginRight: 8, borderTopLeftRadius: 10, borderTopRightRadius: 10 }}>
+                  <DataTable.Header>
+                    <DataTable.Title style={{ flex: 2 }} textStyle={{ fontSize: tamañoletraheadertabla, fontFamily: fonts.regularbold.fontFamily }}>
+                      Concepto
+                    </DataTable.Title>
+                    <DataTable.Title textStyle={{ fontSize: tamañoletraheadertabla, fontFamily: fonts.regularbold.fontFamily }} numeric>
+                      Cant
+                    </DataTable.Title>
+                    <DataTable.Title textStyle={{ fontSize: tamañoletraheadertabla, fontFamily: fonts.regularbold.fontFamily }} numeric>
+                      Total
+                    </DataTable.Title>
+                  </DataTable.Header>
+                </View>
+              </DataTable>
+              <ScrollView nestedScrollEnabled={true}>
+                <DataTable>
+                  {conceptos.map((item) => (
                     <DataTable.Row key={item.key}>
-                    <DataTable.Cell style={{ flex: 2 }}  textStyle={{ fontSize: tamañoletratabla }}>{item.dDesProSer}</DataTable.Cell>
-                    <DataTable.Cell  textStyle={{ fontSize: tamañoletratabla }} numeric>{item.dCantProSer} </DataTable.Cell>
-                    <DataTable.Cell  textStyle={{ fontSize: tamañoletratabla }} numeric>{Number(item.dTotOpeItem).toLocaleString('es-ES')}</DataTable.Cell>
+                      <DataTable.Cell style={{ flex: 2 }} textStyle={{ fontSize: tamañoletratabla, fontFamily: fonts.regular.fontFamily }}>
+                        {item.dDesProSer}
+                      </DataTable.Cell>
+                      <DataTable.Cell textStyle={{ fontSize: tamañoletratabla, fontFamily: fonts.regular.fontFamily }} numeric>
+                        {item.dCantProSer}
+                      </DataTable.Cell>
+                      <DataTable.Cell textStyle={{ fontSize: tamañoletratabla, fontFamily: fonts.regular.fontFamily }} numeric>
+                        {Number(item.dTotOpeItem).toLocaleString('es-ES')}
+                      </DataTable.Cell>
                     </DataTable.Row>
-                ))}
-
-                {/* <DataTable.Pagination
-                    page={page}
-                    numberOfPages={Math.ceil(items.length / itemsPerPage)}
-                    onPageChange={(page) => setPage(page)}
-                    label={`${from + 1}-${to} of ${items.length}`}
-                    numberOfItemsPerPageList={numberOfItemsPerPageList}
-                    numberOfItemsPerPage={itemsPerPage}
-                    onItemsPerPageChange={onItemsPerPageChange}
-                    showFastPaginationControls
-                    selectPageDropdownLabel={'Rows per page'}
-                /> */}
+                  ))}
                 </DataTable>
+              </ScrollView>
+            </View>
 
-                {/* <Text style={[styles.textocontenido,{ color: colors.text}]}> Liq IVA 10 %: {liqiva10}</Text> */}
-                <View style={[styles.contenedordatos]}>
-                    {datamontos && (
-                        <View style={{ flexDirection: 'row', flex: 1 }}>
-                        {/* Primera columna */}
-                        <View style={[styles.columna, { flex: 1 }]}>
+                
+            <View style={[styles.contenedordatos]}>
+                {datamontos && (
+                    <View style={{ flexDirection: 'row', flex: 1 }}>
+                    {/* Primera columna */}
+                    <View style={[styles.columna, { flex: 1 }]}>
 
-                            <Text style={[styles.textocontenido, { color: colors.text }]}>Total Factura: {Number(datamontos.total_operacion).toLocaleString('es-ES')}</Text>
-                            <Text style={[styles.textocontenido, { color: colors.text }]}>Iva 10 %: {Number(datamontos.liq_iva10).toLocaleString('es-ES')}</Text>
-                            <Text style={[styles.textocontenido, { color: colors.text }]}>Iva 5%: {Number(datamontos.liq_iva5).toLocaleString('es-ES')}</Text>
-                        </View>
-
-                        {/* Segunda columna */}
-                        <View style={[styles.columna, { flex: 1, marginTop: 20 }]}>
-                            <Text style={[styles.textototal, { color: colors.text, fontWeight: 'bold' }]}>
-                            Liq IVA Gs.: {Number(datamontos.total_iva).toLocaleString('es-ES')}
-                            </Text>
-                        </View>
-                        </View>
-                    )}
+                        <Text style={[styles.textocontenido, { color: colors.text,fontFamily: fonts.regular.fontFamily }]}>Total Factura: {Number(datamontos.total_operacion).toLocaleString('es-ES')}</Text>
+                        <Text style={[styles.textocontenido, { color: colors.text,fontFamily: fonts.regular.fontFamily }]}>Iva 10 %: {Number(datamontos.liq_iva10).toLocaleString('es-ES')}</Text>
+                        <Text style={[styles.textocontenido, { color: colors.text,fontFamily: fonts.regular.fontFamily }]}>Iva 5%: {Number(datamontos.liq_iva5).toLocaleString('es-ES')}</Text>
+                        <Text style={[styles.textocontenido, { color: colors.text,fontFamily: fonts.regular.fontFamily }]}>Cant Conceptos: {Number(cantidadconceptos).toLocaleString('es-ES')}</Text>
                     </View>
-        </ScrollView>
-        <Button  
-                           style={[styles.button, [styles.buttonActivado],{height:50,marginTop:100} ]}
-                           
-                           onPress={ registrar}
-                           >                                
-                           <Text style={[styles.buttonText, [styles.buttonActivadoText]]}>REGISTRAR</Text>
-                         </Button>
+
+                    {/* Segunda columna */}
+                    <View style={[styles.columna, { flex: 1, marginTop: 20 }]}>
+                        <Text style={[styles.textototal, { color: colors.text, fontFamily: fonts.regularbold.fontFamily }]}>
+                        Liq IVA Gs.: {Number(datamontos.total_iva).toLocaleString('es-ES')}
+                        </Text>
+                    </View>
+                    </View>
+                )}
+            </View>
+    
+            
+            <View style={{ flex: 1 }}>
+  
+
+                <TouchableOpacity 
+                  style={{ 
+                    position: 'absolute',
+                    bottom: 30, // Margen de 10 píxeles sobre la barra inferior del celular
+                    left: 10,   // Margen izquierdo (ajústalo si quieres centrar el botón)
+                    right: 10,  // Margen derecho para ajustar el tamaño dinámico
+                    backgroundColor: colors.acctionsbotoncolor, 
+                    height: 40,
+                    justifyContent: 'center', 
+                    alignItems: 'center', 
+                    borderRadius: 20,
+                    flexDirection: 'row',
+                    paddingHorizontal: 10,
+                  }} 
+                  onPress={registrar}
+                >
+                  <Text style={{
+                    fontSize: 16,
+                    color: 'black', 
+                    fontFamily: fonts.regularbold.fontFamily,
+                    marginRight: 8, 
+                  }}>
+                    REGISTRAR
+                  </Text>
+                  <MaterialIcons name="save-alt" size={24} color="black" />
+                </TouchableOpacity>
+            </View>
       </View>
     )
 
@@ -279,25 +322,24 @@ function DetalleFactura({ navigation }){
 }
 const styles = StyleSheet.create({
 
-   
+   contenedorcabeceradatos:{
+    flexDirection: 'row', alignItems: 'center',marginBottom:20,marginLeft:10,marginRight:10
+   },
+   labelcabeceradatos:{
+    fontSize: 14, color: 'gray'
+   },
+   inputcabeceradatos:{
+    textAlignVertical: 'center',
+    paddingVertical: 1,
+    lineHeight: 18,
+    borderBottomWidth: 1,
+    marginBottom: 5, // Reduce la separación con otros elementos
+    paddingLeft: 10,
+    flex: 1, // Esto hace que el TextInput ocupe el resto del espacio disponible
+    marginLeft: 5, // Para dar un pequeño espacio entre el texto y el TextInput
+
+   },
     
-    input: {
-      borderBottomWidth: 1,
-      borderColor: 'gray',
-      backgroundColor: 'rgba(128, 128, 128, 0.3)',
-      borderRadius: 5,
-      fontSize: 15,
-      height: 40,
-      marginBottom: 7,
-      //paddingHorizontal: 5, // Espacio interno horizontal
-    },
-    inputtextactivo:{
-      //borderBottomColor: 'rgb(44,148,228)', // Cambia el color de la línea inferior aquí
-      borderBottomWidth: 2,
-      marginBottom:25,
-      paddingLeft:10
-      
-    },
     textocontenido:{
         fontSize:12.5,
         marginBottom:5,
@@ -308,12 +350,11 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         borderWidth:1,
         marginTop:10,
-        marginBottom:10,
         marginRight:5,
         marginLeft:5,
         borderRadius:15,
         overflow: 'hidden', 
-        height: 90,
+        height: 100,
         padding: 10,
         
         
