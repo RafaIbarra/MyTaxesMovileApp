@@ -6,7 +6,6 @@
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
-    "newArchEnabled": true,
     "splash": {
       "image": "./assets/splash-icon.png",
       "resizeMode": "contain",
@@ -21,32 +20,52 @@
         "backgroundColor": "#ffffff"
       },
       "permissions": [
+        "android.permission.RECORD_AUDIO",
         "android.permission.RECORD_AUDIO"
       ],
       "package": "com.rafael86.MyTaxesMovileApp"
     },
+    "doctor": {
+      "reactNativeDirectoryCheck": {
+        "exclude": [
+          "@react-native-community/cli",
+          "moment",
+          "react-native-saf-x"
+        ]
+      }
+    },
     "web": {
       "favicon": "./assets/favicon.png"
     },
-    "plugins": [
-      "expo-font",
-      "expo-build-properties",
-      [
-        "@react-native-voice/voice",
-        {
-          "microphonePermission": "Allow MyTaxesMovileApp to access your microphone",
-          "speechRecognitionPermission": "Allow Voice to Text Tutorial to securely recognize user speech"
-        }
-      ],
-      "expo-speech-recognition"
-    ],
     "extra": {
       "eas": {
         "projectId": "81c8a8bd-9d82-4e47-b119-5aedded018d9"
       }
     },
-    "sdkVersion": "52.0.7",
-    "platforms": ["ios", "android"],
-    "devClient": true
+    "developmentClient": true,
+    "platforms": [
+      "ios",
+      "android"
+    ],
+    "newArchEnabled": true,
+    "plugins": [
+      "expo-font",
+      [
+        "@react-native-voice/voice",
+        {
+          "microphonePermission": "CUSTOM: Allow $(PRODUCT_NAME) to access the microphone",
+          "speechRecognitionPermission": "CUSTOM: Allow $(PRODUCT_NAME) to securely recognize user speech"
+        }
+      ],
+      [
+        "expo-build-properties",
+        {
+          "android": {
+            "extraProguardRules": "-keep class com.wenkesj.voice.** { *; }"
+          }
+        }
+      ]
+    ]
   }
 }
+

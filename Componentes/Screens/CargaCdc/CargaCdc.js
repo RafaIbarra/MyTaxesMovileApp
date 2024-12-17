@@ -5,7 +5,6 @@ import * as Clipboard from 'expo-clipboard';
 // import { View, Text, Button, StyleSheet,Linking,Alert } from 'react-native';
 import { View, Text, Button, StyleSheet, Platform, PermissionsAndroid, Alert,Linking } from 'react-native';
 
-import { Audio } from 'expo-av';
 import ScreensCabecera from '../../ScreensCabecera/ScreensCabecera';
 
 function CargaCdc({ navigation }){
@@ -15,73 +14,7 @@ function CargaCdc({ navigation }){
     const [recording, setRecording] = useState();
     const [recordings, setRecordings] = useState([]);
     
-    const checkMicrophonePermission = async () => {
-        try {
-          const { status } = await Audio.requestPermissionsAsync();
-          setHasPermission(status === 'granted');
-        } catch (error) {
-          console.error('Error al verificar permiso del micrófono:', error);
-        }
-      };
 
-
-
-    
-   
-
-      async function startRecording() {
-        try {
-          const perm = await Audio.requestPermissionsAsync();
-          if (perm.status === "granted") {
-            await Audio.setAudioModeAsync({
-              allowsRecordingIOS: true,
-              playsInSilentModeIOS: true
-            });
-            const { recording } = await Audio.Recording.createAsync(Audio.RECORDING_OPTIONS_PRESET_HIGH_QUALITY);
-            setRecording(recording);
-          }
-        } catch (err) {}
-      }
-
-      async function stopRecording() {
-        setRecording(undefined);
-    
-        await recording.stopAndUnloadAsync();
-        let allRecordings = [...recordings];
-        const { sound, status } = await recording.createNewLoadedSoundAsync();
-        allRecordings.push({
-          sound: sound,
-          duration: getDurationFormatted(status.durationMillis),
-          file: recording.getURI()
-        });
-    
-        setRecordings(allRecordings);
-      }
-
-
-      function getDurationFormatted(milliseconds) {
-        const minutes = milliseconds / 1000 / 60;
-        const seconds = Math.round((minutes - Math.floor(minutes)) * 60);
-        return seconds < 10 ? `${Math.floor(minutes)}:0${seconds}` : `${Math.floor(minutes)}:${seconds}`
-      }
-    
-      function getRecordingLines() {
-        return recordings.map((recordingLine, index) => {
-          return (
-            <View key={index} style={styles.row}>
-              <Text style={styles.fill}>
-                Recording #{index + 1} | {recordingLine.duration}
-              </Text>
-              <Button onPress={() => recordingLine.sound.replayAsync()} title="Play"></Button>
-            </View>
-          );
-        });
-      }
-    
-      function clearRecordings() {
-        setRecordings([])
-      }
-        
         const copiarAlPortapapeles = async () => {
             const valorACopiar = "01800319702001005008254822024103013609116639";
             await Clipboard.setStringAsync(valorACopiar);
@@ -98,13 +31,7 @@ function CargaCdc({ navigation }){
 
         <View style={styles.container}>
             <ScreensCabecera title={title} backto={backto}></ScreensCabecera>
-        <Button title={recording ? 'Stop Recording' : 'Start Recording\n\n\n'} onPress={recording ? stopRecording : startRecording} />
-        {getRecordingLines()}
-        <Button title={recordings.length > 0 ? '\n\n\nClear Recordings' : ''} onPress={clearRecordings} />
-            <Text style={styles.title}>
-                Permiso del micrófono: {hasPermission ? 'Concedido' : 'Denegado'}
-            </Text>
-            <Button title="Verificar Permiso" onPress={checkMicrophonePermission} />
+       
         </View>
 
    

@@ -60,7 +60,7 @@ function QRScanner({ navigation }) {
         actualizarEstadocomponente('isHeaderVisible',true)
         const url=data
         Linking.openURL(url).catch((err) => console.error("No se pudo abrir la URL:", err));
-        navigate("DetalleXml")
+        
         // setScannedData(dataFetched['url']); // Guarda los datos para mostrarlos en la app
   
       } catch (error) {

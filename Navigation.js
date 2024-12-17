@@ -17,16 +17,16 @@ import ListadoFacturas from "./Componentes/Screens/ListadoFacturas/ListadoFactur
 import ResumenMes from "./Componentes/Screens/ResumenMes/ResumenMes";
 import CargaManual from "./Componentes/Screens/CargaManual/CargaManual";
 import CargaCdc from "./Componentes/Screens/CargaCdc/CargaCdc";
-import DetalleXml from "./Componentes/Screens/DetalleFacturaXml/DetalleXml";
+
 import DetalleFactura from "./Componentes/Screens/DetalleFactura/DetalleFactura";
 import Camara from "./Componentes/Screens/Camara/Camara";
 import CargaArchivoXml from "./Componentes/Screens/CargaArchivoXml/CargaArchivoXml";
 import Login from "./Componentes/Screens/Login/Login";
 import Loginv2 from "./Componentes/Screens/Login/Loginv2";
 import Loginv3 from "./Componentes/Screens/Login/Loginv3";
-import RegistroUsuario from "./Componentes/Screens/RegistroUsuario/RegistroUsuario";
+//import RegistroUsuario from "./Componentes/Screens/RegistroUsuario/RegistroUsuario";
 //import NumberListener from "./Componentes/Screens/NumberListener/NumberListener";
-
+import VoiceRecognitionComponent from "./Componentes/Screens/Reconocimiento/VoiceRecognitionComponent ";
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 import { Ionicons } from "@expo/vector-icons";
 import AntDesign from '@expo/vector-icons/AntDesign';
@@ -155,7 +155,7 @@ function OpcionesStackTabs({ navigation }){
     <Staktabs.Screen name="StackCargaOpciones" component={StackCargaOpciones} options={{title: 'StackCargaOpciones'}} /> 
 
 
-    <Staktabs.Screen name="DetalleXml" component={DetalleXml} options={{title: 'DetalleXml',headerShown: true}} />
+    
       
       <Staktabs.Screen name="CargaArchivoXml" component={CargaArchivoXml} options={{title: 'XmlFileUploader',headerShown: false}} />
 
@@ -221,7 +221,7 @@ function OpcionesCargaTabs() {
           }}
       /> */}
         <Tab.Screen name="CargaCdc" 
-        component={CargaCdc} 
+        component={VoiceRecognitionComponent} 
         options={{
           tabBarLabel: 'CDC',
           tabBarIcon: ({ color, size,focused }) => {
@@ -347,7 +347,7 @@ function NavigationLogin(){
   return (
     <StackInicio.Navigator screenOptions={{ headerShown: true }}>
       <StackInicio.Screen name="Login" component={Loginv3} options={{headerShown: false}}/>
-      <StackInicio.Screen name="RegistroUsuario" component={RegistroUsuario} options={{headerShown: false}}/>
+      {/* <StackInicio.Screen name="RegistroUsuario" component={RegistroUsuario} options={{headerShown: false}}/> */}
       
     </StackInicio.Navigator>
   );
