@@ -1,6 +1,6 @@
 import React, { useContext,useEffect,useState,useRef } from 'react';
 
-import {  View,Text,FlatList,TouchableOpacity,StyleSheet ,Animated,SafeAreaView,TextInput } from "react-native";
+import {  View,Text,FlatList,TouchableOpacity,StyleSheet ,Animated,TextInput } from "react-native";
 import { Button } from 'react-native-paper';
 import { useNavigation } from "@react-navigation/native";
 import { useTheme } from '@react-navigation/native';
@@ -9,13 +9,13 @@ import Generarpeticion from '../../../Apis/peticiones';
 import Handelstorage from '../../../Storage/handelstorage';
 import Procesando from '../../Procesando/Procesando';
 import { AuthContext } from '../../../AuthContext';
-import moment from 'moment';
-import { FontAwesome6 } from '@expo/vector-icons';
 import { FontAwesome } from '@expo/vector-icons';
 import { AntDesign } from '@expo/vector-icons';
 function ListadoFacturas({ navigation }){
+    const { activarsesion, setActivarsesion } = useContext(AuthContext);
     const { navigate } = useNavigation();
     const { colors,fonts } = useTheme();
+    const {  actualizarEstadocomponente } = useContext(AuthContext);
     const { estadocomponente } = useContext(AuthContext);
     const [guardando,setGuardando]=useState(false)
     const [cargacompleta,setCargacopleta]=useState(false)
@@ -104,20 +104,27 @@ const realizarbusqueda = (palabra) => {
 
     useEffect(() => {
         const unsubscribe = navigation.addListener('focus', () => {
-          console.log('entro en listado')
+          
           setCargacopleta(false)
           setGuardando(true)
+          
           const cargardatos=async()=>{
             if (estadocomponente.qrdetected){
               navigate("CargaArchivoXml", { })
             }else{
-
+              
+              actualizarEstadocomponente('tituloloading','CARGANDO LISTADO..')
+              actualizarEstadocomponente('loading',true)
+              
               const datestorage=await Handelstorage('obtenerdate');
               const anno_storage=datestorage['dataanno']
-              const mes_storage=11
+              const mes_storage=datestorage['datames']
               const body = {};
               const endpoint='MovimientosFacturas/' + anno_storage +'/' + mes_storage + '/0/'
               const result = await Generarpeticion(endpoint, 'POST', body);
+
+              actualizarEstadocomponente('tituloloading','')
+              actualizarEstadocomponente('loading',false)
               const respuesta=result['resp']
               
               if (respuesta === 200){
@@ -140,6 +147,7 @@ const realizarbusqueda = (palabra) => {
                   setMontototaliva(totaliva)
                   setCanttotalfacturas(cantfac)
                   setGuardando(false)
+                
                   
                   
               }else if(respuesta === 403 || respuesta === 401){
@@ -162,7 +170,7 @@ const realizarbusqueda = (palabra) => {
     if(cargacompleta){
 
         return(
-        <SafeAreaView  style={{ flex: 1 }}>
+        
           <View style={{ flex: 1 }}>
              {guardando &&(<Procesando></Procesando>)}
               <View style={[styles.cabeceracontainer,{backgroundColor:colors.card}]}>
@@ -175,7 +183,7 @@ const realizarbusqueda = (palabra) => {
                       </TouchableOpacity>
               )}
 
-              {!busqueda &&( <Text style={[styles.titulocabecera, { color: colors.textcard, fontFamily: fonts.regularbold.fontFamily}]}>Registro Facturas</Text>)}
+              {!busqueda &&( <Text style={[styles.titulocabecera, { color: colors.textcard, fontFamily: fonts.regularbold.fontFamily}]}>Facturas Registradas</Text>)}
               {busqueda &&(
 
               <Animated.View style={{ borderWidth:1,backgroundColor:'rgba(28,44,52,0.1)',borderRadius:10,borderColor:'white',flexDirection: 'row',alignItems: 'center',width:'80%',opacity: fadeAnim}}>
@@ -196,16 +204,11 @@ const realizarbusqueda = (palabra) => {
               )
               }
                 
-              <TouchableOpacity style={[styles.botoncabecera,
-                                      { 
-                                        backgroundColor:'#57DCA3'
-                                      //backgroundColor:colors.botoncolor
-                                      }]} onPress={handlePress}
-              >
+              {/* <TouchableOpacity style={[styles.botoncabecera,{ backgroundColor:'#57DCA3'}]} onPress={handlePress}>
                   <Animated.View style={{ transform: [{ rotate: spin }] }}>
                       <FontAwesome6 name="add" size={24} color="white" />
                   </Animated.View>
-              </TouchableOpacity>
+              </TouchableOpacity> */}
           </View>
 
 
@@ -219,9 +222,7 @@ const realizarbusqueda = (palabra) => {
                     return (
                       <TouchableOpacity
                         style={styles.contenedordatos}
-                        onPress={() => {
-                          navigate('GastosDetalle', { item });
-                        }}
+                        // onPress={() => {navigate('GastosDetalle', { item });}}
                       >
                         {/* Contenedor principal con alineación horizontal */}
                         <View style={styles.row}>
@@ -287,7 +288,7 @@ const realizarbusqueda = (palabra) => {
 
               
           </View>
-        </SafeAreaView>
+        
         
       )
     
@@ -358,6 +359,8 @@ const styles = StyleSheet.create({
         paddingHorizontal: 20,
         paddingVertical: 10,
         borderWidth:0.5,
+        borderBottomWidth:0,
+        
         borderTopRightRadius:50,
         borderColor:'#57DCA3',
         // backgroundColor:'#2a2a2c',

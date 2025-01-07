@@ -4,6 +4,7 @@ import { DrawerContentScrollView, DrawerItemList } from '@react-navigation/drawe
 import { Button, Dialog, Portal,PaperProvider} from 'react-native-paper';
 
 
+
 import Handelstorage from "../../Storage/handelstorage";
 import { AuthContext } from "../../AuthContext";
 
@@ -14,7 +15,7 @@ import { Entypo } from '@expo/vector-icons';
 function DrawerContentInicio(props){
 
     const { activarsesion, setActivarsesion } = useContext(AuthContext);
-    //const { reiniciarvalores } = useContext(AuthContext);
+    const { reiniciarvalores } = useContext(AuthContext);
     
     const { versionsys,setVersionsys } = useContext(AuthContext);
     
@@ -132,8 +133,7 @@ function DrawerContentInicio(props){
 
                 <Button 
                         style={{width:'90%',height:40,
-                          backgroundColor:colors.botoncolor,
-                          //backgroundColor:'rgba(218,165,32,0.7)',
+                          backgroundColor:colors.acctionsbotoncolor,
                           alignContent:'center',alignItems:'center',justifyContent:'center'
                           
                         }} 

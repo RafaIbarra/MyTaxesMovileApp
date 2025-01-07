@@ -89,7 +89,7 @@ class AndroidXmlHandler {
     try {
       // Leer el contenido del archivo usando SAF
       const content = await FileSystem.StorageAccessFramework.readAsStringAsync(fileUri);
-      console.log(fileUri)
+
       const formData = new FormData();
       formData.append('file', {
         uri: fileUri,
@@ -97,7 +97,8 @@ class AndroidXmlHandler {
         type: 'application/xml'
       });
 
-      const response = await fetch('http://192.168.1.103:8000/api/LecturaArchivoXml/', {
+      // const response = await fetch('http://192.168.1.103:8000/api/LecturaArchivoXml/', {
+      const response = await fetch('https://tax.rafaelibarra.xyz/api/LecturaArchivoXml/', {
         method: 'POST',
         body: formData,
         headers: {

@@ -36,29 +36,13 @@ const CargaArchivoXml= ({ navigation }) => {
          const nombrecdc=estadocomponente.datocdc.nombrecdc+'.xml'
          setNombrearchivo(nombrecdc)
       })
-  //   useFocusEffect(
-  //     React.useCallback(() => {
-  //         const onBackPress = () => {
-              
-  //             actualizarEstadocomponente('qrdetected',false)
-  //             navigate("MainTabs2", { })
-  //             return true; // Bloquea el comportamiento predeterminado
-  //         };
-  
-  //         BackHandler.addEventListener("hardwareBackPress", onBackPress);
-  
-  //         return () => BackHandler.removeEventListener("hardwareBackPress", onBackPress);
-  //     }, [navigation])
-  // );
-
-  
-
+ 
 
     const checkDirectoryAccess = async () => {
         const access = await AndroidXmlHandler.hasDirectoryAccess();
         setHasAccess(access);
         if (access) {
-          //loadXmlFiles();
+        
           actualizarEstadocomponente('qrdetected',false)
           await filtrodatos()
         }
@@ -67,7 +51,7 @@ const CargaArchivoXml= ({ navigation }) => {
       const loadXmlFiles = async () => {
         try {
          
-          // const nombrecdc=estadocomponente.datocdc.nombrecdc
+        
           
           const files = await AndroidXmlHandler.listXmlFiles();
           // Convertir la lista de URIs a objetos con información más detallada
@@ -78,7 +62,7 @@ const CargaArchivoXml= ({ navigation }) => {
           }));
           
           
-          // console.log('resultado: ',resultado)
+          
           
           return formattedFiles
         } catch (error) {
@@ -88,14 +72,14 @@ const CargaArchivoXml= ({ navigation }) => {
     
       const filtrodatos = async()=>{
         const datafiles=await loadXmlFiles()
-        // const nombrecdc="01800319702001005008254822024103013609116639.xml"
+
         const nombrecdc=estadocomponente.datocdc.nombrecdc+'.xml'
         
         
         if (datafiles){
-          // console.log('listo para probar')
+         
           const resultado = datafiles.filter(file => file.fileName === nombrecdc);
-          console.log(resultado.length )
+    
           if (resultado.length>0){
 
               handleUploadXml(resultado[0].uri)
@@ -106,8 +90,7 @@ const CargaArchivoXml= ({ navigation }) => {
           
           
         }
-        // console.log(estadocomponente.datocdc.nombrecdc)
-        // console.log('completos: ',datafiles)
+
     
       }
     
@@ -177,11 +160,7 @@ const CargaArchivoXml= ({ navigation }) => {
                   />
               </View>
               {!hasAccess && (
-                // <Button 
-                //   title="Seleccionar Directorio MyTaxes" 
-                //   onPress={handleSelectDirectory}
-                //   disabled={isProcessing}
-                // />
+              
                 <View style={{width:'100%',paddingRight:5,paddingLeft:5}}> 
 
                       <TouchableOpacity 

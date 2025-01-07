@@ -104,7 +104,7 @@ export default function Login({ navigation  }){
         
     setGuardando(true)
     const datos =await Iniciarsesion(username, contrasena)
-    console.log(datos)
+
     if(datos['resp']===200){
         
         // await AsyncStorage.setItem("user", (JSON.stringify(datos['data']['token'])));

@@ -1,12 +1,10 @@
 import React,{useEffect} from "react";
-import {  StyleSheet,View,ActivityIndicator,TouchableWithoutFeedback,Modal } from "react-native";
+import {  StyleSheet,View,ActivityIndicator,Modal } from "react-native";
 
 
 ;
 function Procesando (){
-    // useEffect(()=>{
-    //   
-    // })
+
     return(
         <Modal
         transparent={true}

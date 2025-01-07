@@ -1,25 +1,27 @@
 import React, { createContext, useState, useContext } from 'react';
 
-// Creamos el contexto
+
 export const AuthContext = createContext();
 export const AuthProvider = ({ children }) => {
     const [activarsesion, setActivarsesion] = useState(false);
     const [versionsys,setVersionsys]=useState('Version 1.9')
     const [sesiondata, setSesiondata] = useState();
     const [periodo, setPeriodo] = useState(false);
+    
     const [estadocomponente,setEstadocomponente]=useState({
         
         datositem:[],
         datourl:[],
-        // datocdc:[],
-        datocdc:{'nombrecdc':'01800319702001005008254822024103013609116639.xml'},
+        
+        datocdc:{'nombrecdc':''},
         
         obtuvopermiso:false,
         datafactura:[],
         isHeaderVisible:true,
         activecamara :false,
         qrdetected:false,
-        
+        loading:false,
+        tituloloading:'ESPERANDO TRANSCRIPCION..'
     
       })
 
@@ -35,6 +37,8 @@ export const AuthProvider = ({ children }) => {
         actualizarEstadocomponente('isHeaderVisible',true)
         actualizarEstadocomponente('activecamara',false)
         actualizarEstadocomponente('qrdetected',false)
+        actualizarEstadocomponente('loading',false)
+        actualizarEstadocomponente('tituloloading','')
         
     
       }

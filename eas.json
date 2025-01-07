@@ -10,7 +10,10 @@
         
       },
       "preview": {
-          
+          "env": {
+          "EXPO_PUBLIC_API_URL": "https://tax.rafaelibarra.xyz/api"
+  
+        },
           "ios":{
             "simulator":true
           },

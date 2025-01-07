@@ -10,17 +10,19 @@ function ScreensCabecera ({ navigation,backto,title,estadosupdate }){
     const { navigate } = useNavigation();
     const { estadocomponente } = useContext(AuthContext);
     const {  actualizarEstadocomponente } = useContext(AuthContext);
-    // useEffect(() => {
-    //     console.log(title)
 
-    // })
     const volver=()=>{
         
         if(estadosupdate !==undefined){
             
             actualizarEstadocomponente(estadosupdate.name,estadosupdate.value)
         }
-        navigate(backto, { })
+        if (backto=='back'){
+            navigation.goBack();
+        }else{
+
+            navigate(backto, { })
+        }
     }
     return(
         <View >
@@ -49,7 +51,7 @@ const styles = StyleSheet.create({
       },
       titulocabecera: {
         flex: 1,
-        fontSize: 20,
+        fontSize: 16,
         // fontWeight: 'bold',
         textAlign: 'center',
         // color:'white'

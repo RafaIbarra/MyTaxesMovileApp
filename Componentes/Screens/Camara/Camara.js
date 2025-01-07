@@ -16,7 +16,7 @@ function Camara ({navigation}){
     const { navigate } = useNavigation();
     const startScanning = () => {
         if (permission && permission.granted) {
-          console.log(width,height)
+          
           setScanning(true); // Iniciar el escaneo
           setScannedData(null)
  
@@ -29,8 +29,8 @@ function Camara ({navigation}){
         
         if (data && !isFetching) { // Verifica que no se esté procesando otra solicitud
           setIsFetching(true); // Marca que la solicitud está en progreso
-          console.log('detecto')
-          // console.log('LA DATA', data)
+         
+         
           try {
             
     
@@ -46,11 +46,11 @@ function Camara ({navigation}){
             const url=data
             
             Linking.openURL(url).catch((err) => console.error("No se pudo abrir la URL:", err));
-            //navigate("CargaArchivoXml")
+           
             actualizarEstadocomponente('qrdetected',true)
             actualizarEstadocomponente('activecamara',false)
 
-            // setScannedData(dataFetched['url']); // Guarda los datos para mostrarlos en la app
+          
       
           } catch (error) {
             console.error("Error al realizar el fetch:", error);
@@ -65,7 +65,7 @@ function Camara ({navigation}){
         setIsFetching(true);
         setScanning(false)
         actualizarEstadocomponente('activecamara',false)
-        //navigation.goBack();
+  
     }
     useEffect(() => {
         if (permission && !permission.granted) {

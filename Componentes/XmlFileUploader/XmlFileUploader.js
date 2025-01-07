@@ -41,7 +41,7 @@ const XmlFileUploader = ({ navigation }) => {
       }));
       
       
-      // console.log('resultado: ',resultado)
+
       
       return formattedFiles
     } catch (error) {
@@ -53,17 +53,16 @@ const XmlFileUploader = ({ navigation }) => {
     const datafiles=await loadXmlFiles()
     const nombrecdc="01800319702001005008254822024103013609116639.xml"
     if (datafiles){
-      // console.log('listo para probar')
+     
       const resultado = datafiles.filter(file => file.fileName === nombrecdc);
-      console.log('el resultado: ',resultado)
+    
       //handleUploadXml(item.uri)
       
-      console.log(resultado[0].uri)
+      
       handleUploadXml(resultado[0].uri)
       setXmlFiles(resultado);
     }
-    // console.log(estadocomponente.datocdc.nombrecdc)
-    // console.log('completos: ',datafiles)
+
 
   }
 

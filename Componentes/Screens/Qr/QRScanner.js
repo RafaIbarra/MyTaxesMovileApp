@@ -33,8 +33,7 @@ function QRScanner({ navigation }) {
     if (permission && permission.granted) {
       setScanning(true); // Iniciar el escaneo
       setScannedData(null)
-      console.log('inicia la camara')
-      console.log(estadocomponente.isHeaderVisible)
+      
      
       
     } else {
@@ -45,11 +44,11 @@ function QRScanner({ navigation }) {
   const handleBarcodeScanned = async ({ data }) => {
     if (data && !isFetching) { // Verifica que no se esté procesando otra solicitud
       setIsFetching(true); // Marca que la solicitud está en progreso
-      // console.log('LA DATA', data)
+  
       try {
         
 
-        console.log(data)
+      
         const match = data.match(/Id=([^&]*)/);
         const idValue = match[1]
        

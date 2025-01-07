@@ -8,6 +8,7 @@ import Generarpeticion from '../../../Apis/peticiones';
 import Procesando from '../../Procesando/Procesando';
 import { AuthContext } from '../../../AuthContext';
 function ResumenMes({ navigation }){
+    const { activarsesion, setActivarsesion } = useContext(AuthContext);
     const [guardando,setGuardando]=useState(false)
     const { colors,fonts } = useTheme();
     const { navigate } = useNavigation();
@@ -25,22 +26,26 @@ function ResumenMes({ navigation }){
 
         const unsubscribe = navigation.addListener('focus', () => {
         
-          // console.log('el estado de estadocomponente.qrdetected', estadocomponente.qrdetected)
+        
           const cargardatos=async()=>{
         
               if  (estadocomponente.qrdetected){
-                console.log('debe navegar')
+                
         
                  navigate("CargaArchivoXml", { })
               } else{
 
                 const anno_storage=2024
+                actualizarEstadocomponente('tituloloading','CARGANDO RESUMEN..')
+                actualizarEstadocomponente('loading',true)
 
                 const body = {};
                 const endpoint='ResumenPeriodo/' + anno_storage +'/'
                 const result = await Generarpeticion(endpoint, 'POST', body);
                 const respuesta=result['resp']
-                
+
+                actualizarEstadocomponente('tituloloading','')
+                actualizarEstadocomponente('loading',false)
                 if (respuesta === 200){
                     const registros=result['data']
                     
@@ -53,19 +58,20 @@ function ResumenMes({ navigation }){
                         })
                     }
                     
+                    
                     setDataresumen(registros)
                
                     
                 }else if(respuesta === 403 || respuesta === 401){
-                    
+                   
                     setGuardando(false)
+                    
                     await Handelstorage('borrar')
                     await new Promise(resolve => setTimeout(resolve, 1000))
                     setActivarsesion(false)
                 }
        
               }
-             
               setCargacopleta(true)
            
   
